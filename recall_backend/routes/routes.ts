@@ -8,6 +8,7 @@ import { userModel, contentModel, tagModel, linkModel, Iuser } from "../models/u
 import { userAuthMiddlewareget, userAuthMiddlewarepost } from "../middlewares/userauth";
 import bcrypt from "bcrypt"
 import { boolean } from "zod";
+
 const router = express.Router();
 const salt = 10;
 
@@ -75,6 +76,7 @@ router.post("/api/addContent", userAuthMiddlewarepost, async (req,res)=>{
     const type  = req.body.type;
     const link = req.body.link;
     const tags : string[] = req.body.tags;
+    const image = req.body.image;
     const username = req.body.username;
     const usr = await userModel.findOne({username:username});
     const userId = usr?._id;
@@ -93,7 +95,8 @@ router.post("/api/addContent", userAuthMiddlewarepost, async (req,res)=>{
         type: type,
         link: link,
         tags: refs,
-        userId : userId
+        userId : userId,
+        image: image
     })
     res.status(200).json({
         msg: "content added succesfully"
@@ -136,6 +139,7 @@ router.get("/api/getlink", userAuthMiddlewareget,async (req,res)=>{
 })
 
 router.get("/api/toggleLink", userAuthMiddlewareget,async (req,res)=>{
+    
     const usr = await userModel.findOne({username: req.headers.username});
     let userId;
     if(usr){
@@ -198,6 +202,50 @@ router.get("/api/fetchLink",async (req,res)=>{
     })
     return;
     
+})
+
+import * as cheerio from 'cheerio';
+
+router.get("/api/getPreview", async (req,res)=>{
+    console.log("hitted\n");
+    const url = req.headers.url;
+    try{ new URL(url as string);
+
+        const fetch = (await import('node-fetch')).default;
+    
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 5000);
+        const r = await fetch(url as string, { signal: controller.signal }).finally(() => clearTimeout(timeout));
+        if(!r.ok){
+            res.status(400).json({
+                msg: "invalid link"
+            })
+            return;
+        }
+   
+
+  const html = await r.text();
+  const $ = cheerio.load(html);
+    // console.log(cheerio);
+  const data =  {
+    title: $('meta[property="og:title"]').attr('content') || $('title').text()|| $('meta[name="twitter:title"]').attr('content'),
+    description: $('meta[property="og:description"]').attr('content')||$('meta[name="twitter:description"]').attr("content"),
+    image: $('meta[property="og:image"]').attr('content')||$('meta[name="twitter:image"]').attr("content")||$('meta[name="twitter:card"]').attr("content"),             
+    site: $('meta[property="og:site_name"]').attr('content')|| $('meta[name="twitter:site"]').attr("content")
+  }
+  res.status(200).json({
+    data: data
+  })
+  return;
+}
+catch(e){
+    console.log("error catched");
+     res.status(400).json({
+        msg: "invalid link"
+    })
+    return;
+}
+
 })
 
 

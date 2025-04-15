@@ -1,7 +1,10 @@
-import React from "react";
-import Button from "./button";
-import { useNavigate } from "react-router-dom";
 
+import React, { SetStateAction, useContext, useState } from "react";
+import Button from "./button";
+import { createContext } from "react";
+import { useNavigate} from "react-router-dom";
+ 
+const collapseContext = createContext<[boolean, React.Dispatch<SetStateAction<boolean>>]>([false, ()=>{}]); 
 interface buttonItem {
   title?: string;
   icon?: React.ReactNode;
@@ -51,19 +54,24 @@ const SideBarGroup: React.FC<sideBarGroupProps> = ({ title, button }) => {
 
 function SideBarHeader({ name, username, image }: sideBarHeaderProps) {
   return (
-    <div className="flex items-center gap-3 px-4 py-6 border-b border-muted">
-      {image && <div className="w-10 h-10 rounded-full overflow-hidden">{image}</div>}
-      <div className="flex flex-col">
-        <span className="font-medium">{name}</span>
-        <span className="text-xs text-muted-foreground">@{username}</span>
+    <>
+    <div className="flex items-center justify-between gap-3 px-4 py-6 border-b border-muted">
+      <div className="flex items-center gap-3">
+        {<div className={`w-10 h-10 rounded-full overflow-hidden ${image?"":"bg-blue-600"}`}>{image}</div>}
+        
+        <div className="flex flex-col">
+          <span className="font-medium">{name}</span>
+          <span className="text-xs text-muted-foreground">@{username}</span>
+        </div>
       </div>
     </div>
+    </>
   );
 }
 
 function SideBarFooter() {
   return (
-    <div className="mt-auto px-4 pb-4">
+    <div className="mt-auto px-4 pb-4 sticky bottom-0 whitespace-nowrap">
       <Button className="w-full" variant="secondary">
         Log Out
       </Button>
@@ -72,17 +80,37 @@ function SideBarFooter() {
 }
 
 function SideBar({ name, username, image, children, groups }: sideBarProps) {
+  const [collapse, setCollapse] = useState<boolean>(false);
+    
   return (
-    <div className="h-screen w-64 bg-grey-900 border-r flex flex-col">
-      {children}
-      <SideBarHeader name={name} username={username} image={image} />
-      <div className="flex-1 overflow-y-auto px-1 py-2">
-        {groups.map((group, index) => (
-          <SideBarGroup key={index} title={group.title} button={group.button} />
-        ))}
+    
+    <collapseContext.Provider value={[collapse, setCollapse]}>
+      <Button
+    variant="secondary"
+    size="md"
+    className={`absolute z-50 top-[max(calc(14vh),100px)] transition-all duration-300 rounded-full shadow-md
+      ${collapse ? 'left-2' : 'left-64'}`}
+    onClick={() => setCollapse(!collapse)}
+  >
+    {collapse ? "›" : "‹"}
+  </Button>
+      {/* Sidebar */}
+      <div
+        className={` fixed top-[max(calc(14vh), 100px)] h-[90vh] bg-background border-r shadow-md flex flex-col transition-all duration-300 relative ${
+          collapse ? "w-0 overflow-hidden" : "w-64 overflow-y-auto"
+        }`}
+      >
+        {children}
+        <SideBarHeader name={name} username={username} image={image} />
+        <div className="flex-1 overflow-y-auto px-1 py-2">
+          {groups.map((group, index) => (
+            <SideBarGroup key={index} title={group.title} button={group.button} />
+          ))}
+          
+        </div>
+        <SideBarFooter />
       </div>
-      <SideBarFooter />
-    </div>
+    </collapseContext.Provider>
   );
 }
 

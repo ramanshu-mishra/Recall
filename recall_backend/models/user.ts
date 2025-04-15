@@ -32,6 +32,7 @@ const types = [ "youtube",
 const contentSchema = new mongoose.Schema({
     title : {type:String,required:true},
     description: {type : String},
+    image: {type:String},
     type : {type: String, enum: types,required : true},
     tags : {type: [mongoose.Schema.Types.ObjectId], ref : "tag"},
     link : {type : String, required : true},

@@ -89,6 +89,7 @@ router.post("/api/addContent", userAuthMiddlewarepost, async (req,res)=>{
         }
         refs.push(tg?._id as mongoose.Types.ObjectId);
     }
+    try{
     await contentModel.create({
         title: title,
         description: description,
@@ -101,6 +102,28 @@ router.post("/api/addContent", userAuthMiddlewarepost, async (req,res)=>{
     res.status(200).json({
         msg: "content added succesfully"
     })
+}
+catch(e){
+    res.status(400).json({
+        msg: "could not add content"
+    })
+}
+})
+
+
+router.get("/api/deleteContent", async (req,res)=>{
+    const id = req.headers.id;
+    try{
+        await contentModel.deleteOne({_id:id});
+        res.status(200).json({
+            msg: `deleted content-id: ${id}`
+        })
+    }
+    catch(e){
+        res.status(400).json({
+            msg: `id: ${id} not found in database`
+        })
+    }
 })
 
 router.get("/api/getlink", userAuthMiddlewareget,async (req,res)=>{

@@ -67,16 +67,25 @@ export default function App(){
   // after we fetch all the contents from backend we create the card state array
   const [rerender,setRerender] = useState(false);
   const [cards, setCards] = useState<contents[]>([]);
+  const [visibleCards, setVisibleCards] = useState<contents[]>([]);
   const [cardStates, setCardStates] = useState<boolean[]>([]);
   const cardRef = useRef<(HTMLDivElement|null)[]>(new Array(cards.length).fill(null));
   const [add, setAdd] = useState(false);
-  const {data, loading, error} = useFetchData(jwt);
+  const {data, loading, error} = useFetchData(jwt, rerender);
   useEffect(()=>{
     setCards(data);
-    cardRef.current = new Array(cards.length).fill(null);
-  },[data, cards])
+  },[data, cards]);
+
   useEffect(()=>{
-    setCardStates(new Array(cards.length).fill(false));
+    setVisibleCards(cards);
+  }, [cards]);
+
+  useEffect(()=>{
+    cardRef.current = new Array(visibleCards.length).fill(null);
+  }, [visibleCards])
+
+  useEffect(()=>{
+    setCardStates(new Array(visibleCards.length).fill(false));
     function handleClick(e:MouseEvent){
       const nocard = cardRef.current.every(i=>{
         return (i && !i.contains(e.target as Node));
@@ -89,7 +98,7 @@ export default function App(){
     return ()=>{
       document.removeEventListener("mousedown", handleClick);
     }
-    },[cardStates.length, cards]);
+    },[cardStates.length, visibleCards]);
 
    
 
@@ -128,8 +137,8 @@ export default function App(){
 })} */}
 {
   data.map((card: contents, i: number) => {
-    return <div ref={(x: HTMLDivElement | null) => { cardRef.current[i] = x }}>
-      <Card index={i} title={card.title} description={card.description} image={card.image} type={card.type} tags={card.tags.map((t,_)=>{return t?.title})} link={card.link} key={i}></Card>
+    return <div key={i} ref={(x: HTMLDivElement | null) => { cardRef.current[i] = x }}>
+      <Card index={i} title={card.title} description={card.description} image={card.image} type={card.type} tags={card.tags.map((t,_)=>{return t?.title})} link={card.link} key={i} _id={card._id} ></Card>
     </div>
   })
 }

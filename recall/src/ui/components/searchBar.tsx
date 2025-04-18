@@ -15,14 +15,21 @@ interface SearchBarProps{
     className = "",
     placeholder = "search"
     }:SearchBarProps){
+
         const [text, setText] = useState("");
         const styles = {width:width, height:height}
+
+        function handleEnter(e: React.KeyboardEvent<HTMLInputElement>){
+            if(e.key == "Enter"){
+                
+            }
+        }
         return (
             <div className= {combine(className, "flex border border-x-2 border-black rounded-md ")} style=  {styles}>
                 <div className="">
                     <img src={search} alt="" style={{height: height}} />
                 </div>
-                <input style={{width: "100%", height: "100%", marginLeft: "5px", backgroundColor : "transparent"}} type="text" onChange = {(e)=>setText(e.target.value)} placeholder={placeholder} className="border-none focus:outline-none focus:ring-0 focus:border-transparent"></input>
+                <input style={{width: "100%", height: "100%", marginLeft: "5px", backgroundColor : "transparent"}} type="text" onChange = {(e)=>setText(e.target.value)} onKeyDown= {handleEnter} placeholder={placeholder} className="border-none focus:outline-none focus:ring-0 focus:border-transparent"></input>
             </div>
         )
     }

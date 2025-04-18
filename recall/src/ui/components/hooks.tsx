@@ -49,7 +49,7 @@ function usePreview(url: string){
         }
         const t = setTimeout(()=>{
             fetchData();
-        }, 1000);
+        }, 100);
         return ()=>{
             clearTimeout(t);
             controller.abort();
@@ -62,7 +62,7 @@ function usePreview(url: string){
 
 
 
-function useFetchData(jwt: string){
+function useFetchData(jwt: string, rerender: boolean){
     const [data, setData] = useState<(contents)[]>([]);
     const [loading ,setLoading] = useState(true);
     const [error, setError] = useState<Error|null>(null);
@@ -98,12 +98,12 @@ function useFetchData(jwt: string){
         }
         const t = setTimeout(()=>{
             fetchData();
-        }, 1000);
+        }, 100);
         return ()=>{
             clearTimeout(t);
             controller.abort();
         }
-    }, [jwt])
+    }, [jwt, rerender])
     
     return {data, loading, error};
 

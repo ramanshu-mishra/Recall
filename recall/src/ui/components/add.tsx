@@ -1,4 +1,5 @@
 import { useContext, useRef, useEffect, useState } from "react";
+import React from "react";
 import { addContext } from "./context";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePreview } from "./hooks";
@@ -16,6 +17,8 @@ const types = [ "youtube",
     "Images",
     "others",
     "notes"]
+
+
 export function Add() {
     const [add, setAdd] = useContext(addContext);
     const addref = useRef<HTMLDivElement>(null);
@@ -54,6 +57,9 @@ export function Add() {
         setImage("");
       } else {
         setImage(data?.image as string);
+        setTitle(data?.title as string);
+        setDesc(data?.description as string);
+        setTags([data?.site as string]);
         if(types.includes(data?.site as string)){
             setType(data?.site as string);
         }
@@ -84,7 +90,7 @@ export function Add() {
                 body: JSON.stringify({
                     title: title,
                     description: desc,
-                    link: link,
+                    link: correctlink,
                     tags: tags,
                     image: image,
                     type: type

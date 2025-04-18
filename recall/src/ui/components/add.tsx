@@ -6,9 +6,9 @@ import { usePreview } from "./hooks";
 import load from "../../assets/loading.png"
 import logo from "../../assets/logo.png"
 import Button from "./button";
-import { server } from "../../exports";
+import { server,jwt } from "../../exports";
 import { render } from "./context";
-const jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlNoYWt0aTExIiwiaWF0IjoxNzQ0NjY1ODM0fQ.lZdJp8FsYTcFKQAhhp4xuifbPMpCnkyr2WVrlQ9NLwA";
+
 // ...imports stay the same
 const types = [ "youtube",
     "twitter",
@@ -133,6 +133,7 @@ export function Add() {
               throw new Error("something went wrong "+res.msg);
             }
             setRerender(e=>!e);
+            setAdd(false);
             
         }
         catch(e){

@@ -3,7 +3,7 @@ import logo from "../../assets/logo.png";
 import { cardState } from "./context";
 import mongoose from "mongoose";
 import { server } from "../../exports";
-import { render } from "./context";
+import { render} from "./context";
 interface CardInterface {
   _id: mongoose.Schema.Types.ObjectId,
   className?: string;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { server } from "../../exports"
 const jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlNoYWt0aTExIiwiaWF0IjoxNzQ0NjY1ODM0fQ.lZdJp8FsYTcFKQAhhp4xuifbPMpCnkyr2WVrlQ9NLwA"
 
@@ -103,10 +103,34 @@ function useFetchData(jwt: string, rerender: boolean){
             clearTimeout(t);
             controller.abort();
         }
-    }, [jwt, rerender])
+    }, [jwt , rerender])
     
     return {data, loading, error};
 
     }
+
+
+  export  function useDebounce(text:string){
+        const [value,setValue] = useState("");
+        useEffect(()=>{
+           const t =  setTimeout(()=>{
+                setValue(text);
+            }, 50);
+            return ()=>{
+                clearInterval(t);
+            }
+        })
+        return value;
+    }
+
+export function usePrev(text:string){
+    const ref = useRef("");
+    useEffect(()=>{
+        ref.current = text;
+    }, [text]);
+    return text;
+}
+
+
 
 export {usePreview, useFetchData}

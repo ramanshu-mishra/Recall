@@ -7,56 +7,39 @@ import logo from "./assets/logo.png"
 import { Card } from "./ui/components/card"
 import React, { createContext, SetStateAction, useContext,useState,useEffect, useRef, Ref } from "react"
 import { cardState } from "./ui/components/context"
-import {addContext} from "./ui/components/context"
+import {addContext, cardContext} from "./ui/components/context"
 import { Add } from "./ui/components/add"
 import { useFetchData } from "./ui/components/hooks"
-const jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlNoYWt0aTExIiwiaWF0IjoxNzQ0NjY1ODM0fQ.lZdJp8FsYTcFKQAhhp4xuifbPMpCnkyr2WVrlQ9NLwA"
+import { LoadCard } from "./ui/components/loadcard"
+import {jwt} from "./exports";
 const btns = [
   {
-    title: "people",
+    // title: "people",
     button : [
-      {title: "ramanshu",
+      {title: "Bookmarks",
         url : "#"
       },
       {
-        title: "neelesh",
+        title: "Notes",
         url: "!"
       }
     ]
-  },
-  {
-    title: "gangs",
-    button: [
-      {
-        title: "bagga",
-        url: "&"
-      },
-      {title: "billu",
-        url: "^"
-      }
-    ]
-  }
+  } 
 ]
 
-// const cards = [
-//   {
-//     title: "ramanshu",
-//     description: "ramanshu is a good boy",
-//     image : "https://www.notion.so/images/meta/default.png",
-//     type: "notion",
-//     tags : ["ram", "shyam", "bhola"],
-//     link: "https://www.notion.so/to-do-1b424883ae5580538ad3d645280eb041"
-//   },
-//   {
-//     title: "ramanshu",
-//     description: "ramanshu is a good boy",
-//     image : "https://www.notion.so/images/meta/default.png",
-//     type: "notion",
-//     tags : ["ram", "shyam", "bhola"],
-//     link: "https://www.notion.so/to-do-1b424883ae5580538ad3d645280eb041"
-//   }
-// ];
 
+function RepeatDivs() {
+  
+    const num = 4;
+    const arr  = new Array(num).fill(null);
+  return (
+    <>
+    {arr.map(i=>{
+      return <LoadCard></LoadCard>
+    })}
+    </>
+  );
+}
 import { contents } from "./exports"
 import { render } from "./ui/components/context"
 export default function App(){
@@ -72,9 +55,10 @@ export default function App(){
   const cardRef = useRef<(HTMLDivElement|null)[]>(new Array(cards.length).fill(null));
   const [add, setAdd] = useState(false);
   const {data, loading, error} = useFetchData(jwt, rerender);
+  const loadref = useRef<HTMLDivElement>(null);
   useEffect(()=>{
     setCards(data);
-  },[data, cards]);
+  },[data]);
 
   useEffect(()=>{
     setVisibleCards(cards);
@@ -104,7 +88,7 @@ export default function App(){
 
 
   return (
-    <>    <render.Provider value={[rerender, setRerender]}><div className="transition-all">
+    <><cardContext.Provider value={[cards, visibleCards, setVisibleCards]}><render.Provider value={[rerender, setRerender]}><div className="transition-all">
     {<addContext.Provider value={[add,setAdd]}><Add></Add></addContext.Provider>}
     {<cardState.Provider value = {[cardStates, setCardStates]}>
     <div className={`h-full ${add?"blur-sm pointer-events-none":""}`}>
@@ -131,18 +115,19 @@ export default function App(){
       </div>
       <div className="flex-1 p-6 overflow-y-auto">
         
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" >
-      {/* {cards.map((card, i) => {
-       return  <div ref={(x)=>{cardRef.current[i] = x}}><Card index={i}  title={card.title} description={card.description} image={card.image} tags={card.tags} type={card.type} link={card.link} key={i} ></Card> </div> 
-})} */}
+     
+    { <div ref={loadref} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" >
+ {
+  loading && <RepeatDivs></RepeatDivs>
+}
 {
-  data.map((card: contents, i: number) => {
+  visibleCards.map((card: contents, i: number) => {
     return <div key={i} ref={(x: HTMLDivElement | null) => { cardRef.current[i] = x }}>
       <Card index={i} title={card.title} description={card.description} image={card.image} type={card.type} tags={card.tags.map((t,_)=>{return t?.title})} link={card.link} key={i} _id={card._id} ></Card>
     </div>
   })
 }
-    </div>
+    </div>}
   </div>
     </div>
     </BrowserRouter>
@@ -150,6 +135,7 @@ export default function App(){
     </cardState.Provider>}
     </div>
     </render.Provider>
+    </cardContext.Provider>
     </>
   )
 }

@@ -11,7 +11,7 @@ interface buttonItem {
   url?: string;
 }
 interface sideBarGroupProps {
-  title: string;
+  title?: string;
   button: buttonItem[];
 }
 interface sideBarHeaderProps {

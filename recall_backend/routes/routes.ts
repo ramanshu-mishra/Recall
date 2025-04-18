@@ -262,7 +262,11 @@ router.get("/api/getPreview", async (req,res)=>{
   return;
 }
 catch(e){
+    if(e instanceof Error)
+    console.log("error catched", e.message);
+else {
     console.log("error catched");
+}
      res.status(400).json({
         msg: "invalid link"
     })

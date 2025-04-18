@@ -49,7 +49,7 @@ function usePreview(url: string){
         }
         const t = setTimeout(()=>{
             fetchData();
-        }, 100);
+        }, 500);
         return ()=>{
             clearTimeout(t);
             controller.abort();

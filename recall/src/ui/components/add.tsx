@@ -1,12 +1,14 @@
 import { useContext, useRef, useEffect, useState } from "react";
+import React from "react";
 import { addContext } from "./context";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePreview } from "./hooks";
 import load from "../../assets/loading.png"
+import logo from "../../assets/logo.png"
 import Button from "./button";
-import { server } from "../../exports";
+import { server,jwt } from "../../exports";
 import { render } from "./context";
-const jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlNoYWt0aTExIiwiaWF0IjoxNzQ0NjY1ODM0fQ.lZdJp8FsYTcFKQAhhp4xuifbPMpCnkyr2WVrlQ9NLwA";
+
 // ...imports stay the same
 const types = [ "youtube",
     "twitter",
@@ -16,6 +18,22 @@ const types = [ "youtube",
     "Images",
     "others",
     "notes"]
+
+
+function getDomainName(url:string){
+  let u = url;
+  if(u.startsWith("http://")){
+   u = u.slice(7);
+  }
+  if(u.startsWith("www.")){
+    u = u.slice(4);
+  }
+  const ind = u?.indexOf(".");
+  u = u.slice(0, ind);
+  console.log("your domain is: ", u);
+  return u;
+}
+
 export function Add() {
     const [add, setAdd] = useContext(addContext);
     const addref = useRef<HTMLDivElement>(null);
@@ -29,6 +47,7 @@ export function Add() {
     const { data, loading, error } = usePreview(correctlink);
     const [tag,setTag]= useState("");
     const [rerender, setRerender]= useContext(render);
+
     useEffect(() => {
       function handleClick(e: MouseEvent) {
         if (addref.current && !addref.current.contains(e.target as Node)) {
@@ -51,26 +70,45 @@ export function Add() {
       if (loading) {
         setImage(load);
       } else if (error) {
-        setImage("");
+        setImage(logo);
+        setTitle("");
+        setDesc("");
+        setTags([]);
+        setType("others")
       } else {
-        setImage(data?.image as string);
-        if(types.includes(data?.site as string)){
-            setType(data?.site as string);
-        }
-        else{
-            setType("others");
-        }
+        const tg = getDomainName(correctlink);
+        setImage(data?.image as string|| logo);
+        setTitle(data?.title as string||"");
+        setDesc(data?.description as string||"");
+        if(data?.site != "" && data?.site != undefined && !tags.includes(data?.site as string))
+        setTags([...tags, data?.site as string]);
+      console.log(data?.site);
+      if(!tags.includes(tg))
+        setTags([...tags, tg]);
+        let tp = "others";
+        types.forEach((v)=>{
+          if(v.toLowerCase() == data?.site?.toLowerCase()){
+            tp = data?.site.toLowerCase();
+          }
+        })
+        setType(tp);
       }
     }, [loading, error, data]);
     
     function handleTags(e: React.KeyboardEvent<HTMLInputElement>){
-        if(e.key == " " && tag.trim() != ""){
+        if(e.key == " " && tag.trim() != "" && tag != undefined){
             const t = tag.trim();
             if(!tags.includes(t)){
                 setTags([...tags, t]);
             }
             setTag("");
         }
+    }
+    
+    function removeTag(t:string){
+     const tg = tags.filter((i)=>i!=t);
+     console.log(tg);
+     setTags(tg as string[]);
     }
 
     async function handlePost(){
@@ -84,7 +122,7 @@ export function Add() {
                 body: JSON.stringify({
                     title: title,
                     description: desc,
-                    link: link,
+                    link: correctlink,
                     tags: tags,
                     image: image,
                     type: type
@@ -95,6 +133,7 @@ export function Add() {
               throw new Error("something went wrong "+res.msg);
             }
             setRerender(e=>!e);
+            setAdd(false);
             
         }
         catch(e){
@@ -181,7 +220,10 @@ export function Add() {
                   {/* <label className="block text-white mb-1">📝 Tags</label> */}
                   <div  className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-400 transition flex gap-2 flex-wrap">
                     {tags.map((i,_)=>{
-                        return <div className="rounded-md bg-slate-500 p-1" key={_}>{i}</div>
+                        return <div className="rounded-md bg-slate-500 p-1 px-2 relative" key={_}>
+                          <div className="absolute text-[0.6rem] top-0 right-0 bg-red-600 px-[2px] hover:cursor-pointer rounded-lg" onClick={()=>removeTag(i)}>X</div>
+                          <div className="bg-blue-500 rounded-md px-1">{i}</div>
+                          </div>
                     })}
                   <input
                     type="text"

@@ -23,7 +23,12 @@
             })
             return
         }
-        const user = await userModel.findOne({username:username});
+        const user = await userModel.findOne({
+            '$or' : [
+                {username:username},
+                {email: username}
+            ]
+        });
         if(!user){
          res.status(400).json({
                 msg: "user not found"
@@ -39,6 +44,7 @@
                 const token = jwt.sign({username:username}, jwtKey as string);
                 console.log("signed jwt");
                 req.body.token = token;
+                req.body.name = user.name;
                 console.log("we got to the next function\n");
                 next();
             }

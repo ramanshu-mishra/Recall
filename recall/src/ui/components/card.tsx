@@ -1,8 +1,11 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import logo from "../../assets/logo.png";
 import { cardState } from "./context";
-
+import mongoose from "mongoose";
+import { server } from "../../exports";
+import { render} from "./context";
 interface CardInterface {
+  _id: mongoose.Schema.Types.ObjectId,
   className?: string;
   title: string;
   description: string;
@@ -13,7 +16,10 @@ interface CardInterface {
   index: number;
 }
 
+
+
 export function Card({
+  _id,
   title,
   description,
   image,
@@ -24,11 +30,11 @@ export function Card({
   index,
 }: CardInterface) {
   const [states, setStates] = useContext(cardState);
+  const [del, setDel] = useState(false);
   const isActive = states[index];
-
   const handleClick = () => {
     if(isActive){
-        setStates(new Array(states.length).fill(false));
+        setStates(new Array(states.length).fill(false)); 
     }
     else{
         const newStates = states.map((_, i) => i === index);
@@ -36,6 +42,24 @@ export function Card({
     }
     
   };
+  const [rerender, setRerender]= useContext(render);
+  async function deleteCard(){
+    try{
+    const res = await fetch(server+"/api/deleteContent",{
+      method: "GET",
+      headers : {
+        "id" : _id.toString()
+      }
+    } )
+    if(res.ok){
+      setRerender(e=>!e);
+    }
+  }
+  catch(e){
+    if(e instanceof Error)
+    console.log(e.message)
+  }
+  }
 
   return (
     <div className={`rounded-xl overflow-hidden shadow-lg transform hover:scale-105 transition-all duration-300 ${className}`}>
@@ -45,6 +69,8 @@ export function Card({
       >
         {/* Image Section */}
         <div className="relative">
+          {isActive && <div className="text-white bg-red-600 w-fit px-2 rounded-lg absolute right-0 z-[999] hover:scale-105 cursor-pointer hover:bg-red-700 hover:border-s-black"
+           onClick={()=>deleteCard()}>X</div>}
           {image ? (
             <img
               src={image}

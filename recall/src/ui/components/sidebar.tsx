@@ -1,8 +1,9 @@
 
-import React, { SetStateAction, useContext, useState } from "react";
+import React, { SetStateAction, useContext, useEffect, useRef, useState } from "react";
 import Button from "./button";
 import { createContext } from "react";
 import { useNavigate} from "react-router-dom";
+import { tokenContext, detailContext } from "./context";
  
 const collapseContext = createContext<[boolean, React.Dispatch<SetStateAction<boolean>>]>([false, ()=>{}]); 
 interface buttonItem {
@@ -11,7 +12,7 @@ interface buttonItem {
   url?: string;
 }
 interface sideBarGroupProps {
-  title: string;
+  title?: string;
   button: buttonItem[];
 }
 interface sideBarHeaderProps {
@@ -53,6 +54,7 @@ const SideBarGroup: React.FC<sideBarGroupProps> = ({ title, button }) => {
 };
 
 function SideBarHeader({ name, username, image }: sideBarHeaderProps) {
+  
   return (
     <>
     <div className="flex items-center justify-between gap-3 px-4 py-6 border-b border-muted">
@@ -70,17 +72,45 @@ function SideBarHeader({ name, username, image }: sideBarHeaderProps) {
 }
 
 function SideBarFooter() {
+  const [confirm, setConfirm]= useState(false);
+  const [jwt, setJwt] = useContext(tokenContext);
+  const ref = useRef<HTMLDivElement>(null);
+
+  function handleClick(e:MouseEvent){
+      if(ref.current && !ref.current.contains(e.target as Node)){
+        setConfirm(false);
+      }
+  }
+  useEffect(()=>{
+      window.addEventListener("mousedown", handleClick);
+      return ()=>{
+        window.removeEventListener("mousedown", handleClick);
+      }
+  })
+
   return (
     <div className="mt-auto px-4 pb-4 sticky bottom-0 whitespace-nowrap">
-      <Button className="w-full" variant="secondary">
+     {!confirm && <Button className="w-full" variant="secondary" onClick={()=>{
+        setConfirm(true);
+      }}>
         Log Out
-      </Button>
+      </Button>}
+      <div ref = {ref}>
+      {confirm && <Button className="w-full bg-red-500" variant="secondary" onClick={()=>{
+        setConfirm(false);
+        setJwt("");
+      }} >
+        Are you Sure ?
+      </Button> }
+      </div>
+      
     </div>
   );
 }
 
 function SideBar({ name, username, image, children, groups }: sideBarProps) {
   const [collapse, setCollapse] = useState<boolean>(false);
+ 
     
   return (
     
@@ -96,7 +126,7 @@ function SideBar({ name, username, image, children, groups }: sideBarProps) {
   </Button>
       {/* Sidebar */}
       <div
-        className={` fixed top-[max(calc(14vh), 100px)] h-[90vh] bg-background border-r shadow-md flex flex-col transition-all duration-300 relative ${
+        className={`  top-[max(calc(14vh), 100px)] h-[60vh] rounded-lg bg-background border-r shadow-md flex flex-col transition-all duration-300 relative grow  ${
           collapse ? "w-0 overflow-hidden" : "w-64 overflow-y-auto"
         }`}
       >

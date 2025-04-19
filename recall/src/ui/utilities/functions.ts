@@ -3,6 +3,5 @@ export function combine(...args: string[]){
     for(const str of args){
         ans = ans + str + " ";
     }
-    console.log(ans);
     return ans;
 }

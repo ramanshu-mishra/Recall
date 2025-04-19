@@ -50,6 +50,7 @@ export default function Login() {
         const data = await r.json();
         const token = data.token;
         setJwt(token);
+        localStorage.setItem("token", token);
         setDetail({
           name: data.name,
           username : data.username

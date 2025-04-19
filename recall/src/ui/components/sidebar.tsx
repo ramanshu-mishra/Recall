@@ -98,6 +98,7 @@ function SideBarFooter() {
       <div ref = {ref}>
       {confirm && <Button className="w-full bg-red-500" variant="secondary" onClick={()=>{
         setConfirm(false);
+        localStorage.removeItem("token");
         setJwt("");
       }} >
         Are you Sure ?
@@ -110,8 +111,7 @@ function SideBarFooter() {
 
 function SideBar({ name, username, image, children, groups }: sideBarProps) {
   const [collapse, setCollapse] = useState<boolean>(false);
- 
-    
+  
   return (
     
     <collapseContext.Provider value={[collapse, setCollapse]}>

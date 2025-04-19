@@ -5,7 +5,8 @@ import Login from "./ui/pages/Login"
 import { useState } from "react"
 import { tokenContext, detailContext } from "./ui/components/context"
 export default function   App(){
-  const [token, setToken] = useState("");
+  const t = localStorage.getItem("token");
+  const [token, setToken] = useState((t)? t: ""); 
   const [detail, setDetail] = useState({name: "", username: ""});
   return(
     <BrowserRouter>

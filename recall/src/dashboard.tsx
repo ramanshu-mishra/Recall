@@ -45,14 +45,14 @@ import { contents } from "./exports"
 import { render } from "./ui/components/context"
 export  function Dash(){
   const navigate = useNavigate();
-  const [jwt, setJwt] = useContext(tokenContext);
+  const [jwt,setJwt] = useContext(tokenContext);
   const [rerender,setRerender] = useState(false);
   const [cards, setCards] = useState<contents[]>([]);
   const [visibleCards, setVisibleCards] = useState<contents[]>([]);
   const [cardStates, setCardStates] = useState<boolean[]>([]);
   const cardRef = useRef<(HTMLDivElement|null)[]>(new Array(cards.length).fill(null));
   const [add, setAdd] = useState(false);
-  const {data, loading, error} = useFetchData(jwt, rerender);
+  const {data, loading, error} = useFetchData(jwt? jwt : "", rerender);
   const loadref = useRef<HTMLDivElement>(null);
   const [detail, setDetail] = useContext(detailContext);
 

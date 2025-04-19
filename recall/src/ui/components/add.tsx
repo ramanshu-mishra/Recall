@@ -6,8 +6,9 @@ import { usePreview } from "./hooks";
 import load from "../../assets/loading.png"
 import logo from "../../assets/logo.png"
 import Button from "./button";
-import { server,jwt } from "../../exports";
-import { render } from "./context";
+import { server } from "../../exports";
+import { render, tokenContext } from "./context";
+
 
 // ...imports stay the same
 const types = [ "youtube",
@@ -20,19 +21,30 @@ const types = [ "youtube",
     "notes"]
 
 
-function getDomainName(url:string){
-  let u = url;
-  if(u.startsWith("http://")){
-   u = u.slice(7);
-  }
-  if(u.startsWith("www.")){
-    u = u.slice(4);
-  }
-  const ind = u?.indexOf(".");
-  u = u.slice(0, ind);
-  console.log("your domain is: ", u);
-  return u;
-}
+    function getDomainName(url: string): string  {
+      try {
+        const { hostname } = new URL(url);
+    
+        // Remove common subdomains like www.
+        const parts = hostname.split('.');
+        let name = '';
+    
+        if (parts.length >= 2) {
+          if (parts[0] === 'www') {
+            name = parts[1];
+          } else {
+            name = parts[0];
+          }
+        } else {
+          name = parts[0];
+        }
+    
+        return name;
+      } catch (e) {
+        console.error("Invalid URL:", e);
+        return "";
+      }
+    }
 
 export function Add() {
     const [add, setAdd] = useContext(addContext);
@@ -47,6 +59,7 @@ export function Add() {
     const { data, loading, error } = usePreview(correctlink);
     const [tag,setTag]= useState("");
     const [rerender, setRerender]= useContext(render);
+    const jwt = localStorage.getItem("token");
 
     useEffect(() => {
       function handleClick(e: MouseEvent) {
@@ -117,7 +130,7 @@ export function Add() {
                 method: "POST",
                 headers: {
                     "Content-Type" : "application/json",
-                    "authorization": jwt
+                    "authorization": jwt?jwt:""
                 },
                 body: JSON.stringify({
                     title: title,

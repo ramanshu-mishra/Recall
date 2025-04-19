@@ -3,7 +3,7 @@ import React, { SetStateAction, useContext, useEffect, useRef, useState } from "
 import Button from "./button";
 import { createContext } from "react";
 import { useNavigate} from "react-router-dom";
-import { tokenContext, detailContext } from "./context";
+import { tokenContext } from "./context";
  
 const collapseContext = createContext<[boolean, React.Dispatch<SetStateAction<boolean>>]>([false, ()=>{}]); 
 interface buttonItem {
@@ -73,7 +73,7 @@ function SideBarHeader({ name, username, image }: sideBarHeaderProps) {
 
 function SideBarFooter() {
   const [confirm, setConfirm]= useState(false);
-  const [jwt, setJwt] = useContext(tokenContext);
+  const [_jwt, setJwt] = useContext(tokenContext);
   const ref = useRef<HTMLDivElement>(null);
 
   function handleClick(e:MouseEvent){

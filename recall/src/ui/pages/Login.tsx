@@ -8,8 +8,8 @@ import { server } from "../../exports";
 export default function Login() {
   const navigate = useNavigate();
   const [invalid, setInvalid] = useState(false);
-  const [jwt, setJwt] = useContext(tokenContext);
-  const [detail, setDetail] = useContext(detailContext);
+  const [_jwt, setJwt] = useContext(tokenContext);
+  const [_detail, setDetail] = useContext(detailContext);
   const [form, setForm] = useState({
     emailOrUsername: "",
     password: "",

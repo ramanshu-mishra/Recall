@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import logo from "../../assets/logo.png";
 import { cardState } from "./context";
 import mongoose from "mongoose";
@@ -24,13 +24,11 @@ export function Card({
   description,
   image,
   tags,
-  type,
   link,
   className,
   index,
 }: CardInterface) {
   const [states, setStates] = useContext(cardState);
-  const [del, setDel] = useState(false);
   const isActive = states[index];
   const handleClick = () => {
     if(isActive){
@@ -42,7 +40,7 @@ export function Card({
     }
     
   };
-  const [rerender, setRerender]= useContext(render);
+  const [_rerender, setRerender]= useContext(render);
   async function deleteCard(){
     try{
     const res = await fetch(server+"/api/deleteContent",{

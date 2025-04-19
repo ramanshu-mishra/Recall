@@ -160,7 +160,7 @@ export default function Signup() {
           handleSubmit();
         }} className="space-y-4">
           <div>
-            <label className="block text-sm text-muted-foreground flex gap-1 justify-between">Name
+            <label className=" text-sm text-muted-foreground flex gap-1 justify-between">Name
             {  !validName && !(form.name == "") && <div className="flex justify-center text-red-400">Name should be 1 to 30 characters long</div>}
               </label> 
             <input
@@ -173,7 +173,7 @@ export default function Signup() {
             />
           </div>
           <div>
-            <label className="block text-sm text-muted-foreground flex justify-between gap-1  ">Username
+            <label className=" text-sm text-muted-foreground flex justify-between gap-1  ">Username
             {usernameExists && validUsername && <div className="flex justify-center text-red-400"> Username taken</div>}
             {!usernameExists && validUsername && <div className="flex justify-center text-green-400"> Username available</div>}
             {!usernameExists && !validUsername && debouncedUsername != "" && <div className="flex justify-center text-red-400"> Username should be 3-20 characters long without spaces</div>}
@@ -189,7 +189,7 @@ export default function Signup() {
             />
           </div>
           <div>
-            <div className="block text-sm text-muted-foreground flex justify-between gap-1 ">Email 
+            <div className=" text-sm text-muted-foreground flex justify-between gap-1 ">Email 
             {emailExists && <div className="flex justify-center text-red-400">Email already exists</div>}
             {!validEmail && debouncedEmail != "" && <div className="flex justify-center text-red-400">invalid Email</div>}
             </div>
@@ -204,7 +204,7 @@ export default function Signup() {
             />
           </div>
           <div>
-            <label className="block text-sm text-muted-foreground flex justify-between gap-1">Password
+            <label className=" text-sm text-muted-foreground flex justify-between gap-1">Password
             {  !validPass && !(form.password == "") && <div className="flex justify-center text-red-400">password should be minimum 8 characters long</div>}
             </label>
             <div className="flex "><input

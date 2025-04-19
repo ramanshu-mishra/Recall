@@ -2,9 +2,8 @@ import { useContext, useState } from "react"
 import React from "react";
 import search from "../../assets/search.svg";
 import {combine} from "../utilities/functions"
-import { useDebounce, useFetchData, usePrev } from "./hooks";
-import { contents, jwt } from "../../exports";
-import { render , cardContext} from "./context";
+import { useDebounce } from "./hooks";
+import { cardContext} from "./context";
 interface SearchBarProps{
     width?: string,
     height?: string,
@@ -21,10 +20,9 @@ interface SearchBarProps{
 
         const [text, setText] = useState("");
         const styles = {width:width, height:height}
-        const [rerender, setRerender] = useContext(render);
-        const [cards, visibleCards, setVisibleCards] = useContext(cardContext);
+        const [cards, _visibleCards, setVisibleCards] = useContext(cardContext);
         const debouncedValue = useDebounce(text);
-        const prev = usePrev(text);
+       
        
         function handleEnter(e: React.KeyboardEvent<HTMLInputElement>) {
 

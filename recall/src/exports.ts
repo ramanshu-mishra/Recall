@@ -1,4 +1,6 @@
-const server = "http://localhost:3000";
+// const server = "http://localhost:3000";
+const server = "https://recall-2wof.onrender.com"
+
 import mongoose from "mongoose";
 interface contents{
     _id: mongoose.Schema.Types.ObjectId,

@@ -31,7 +31,7 @@ export function NavBar({
     return (
         <nav
            
-            className={combine("flex items-center", variants[variant], sizes[size], className)}
+            className={combine("flex items-center fixed top-0 z-40", variants[variant], sizes[size], className)}
         >
             {/* Logo section */}
             <div className="flex-shrink-0 w-[15vw]">

@@ -53,10 +53,72 @@ router.post("/api/login", loginMiddleware,(req,res)=>{
     const pasword = req.body.password;
     res.status(200).json({
         msg: "User logged in succesfully",
-        token : req.body.token
+        token : req.body.token,
+        name: req.body.name,
+        username: req.body.username
     })
     return
 });
+
+router.get("/api/username",async (req,res)=>{
+    const username = req.headers.username;
+    if(!username ){
+        res.status(400).json({
+            msg: "username not sent"
+        })
+        return;
+    }
+    try{
+    const user = await userModel.findOne({username: username});
+    if(user){
+        res.status(200).json({
+            msg: "exists"
+        })
+        return;
+    }
+    else{
+        res.status(200).json({
+            msg: "dont-exists"
+        })
+    }
+}
+catch(e){
+    res.status(500).json({
+        msg: "internal server error"
+    })
+    return;
+}})
+router.get("/api/email",async (req,res)=>{
+    const email = req.headers.email ;
+    if(!email){
+        res.status(400).json({
+            msg: "username not sent"
+        })
+        return;
+    }
+    try{
+    const user = await userModel.findOne({email: email});
+    if(user){
+        res.status(200).json({
+            msg: "exists"
+        })
+        return;
+    }
+    else{
+        res.status(200).json({
+            msg: "dont-exists"
+        })
+        return;
+    }
+}
+catch(e){
+    res.status(500).json({
+        msg: "internal server error"
+    })
+    return;
+}
+
+})
 
 router.get("/api/fetchContent", userAuthMiddlewareget,async (req,res)=>{
     const usr = await userModel.findOne({username : req.headers.username});
@@ -102,11 +164,13 @@ router.post("/api/addContent", userAuthMiddlewarepost, async (req,res)=>{
     res.status(200).json({
         msg: "content added succesfully"
     })
+    return;
 }
 catch(e){
     res.status(400).json({
         msg: "could not add content"
     })
+    return;
 }
 })
 
@@ -118,11 +182,13 @@ router.get("/api/deleteContent", async (req,res)=>{
         res.status(200).json({
             msg: `deleted content-id: ${id}`
         })
+        return;
     }
     catch(e){
         res.status(400).json({
             msg: `id: ${id} not found in database`
         })
+        return;
     }
 })
 
@@ -158,7 +224,7 @@ router.get("/api/getlink", userAuthMiddlewareget,async (req,res)=>{
     res.status(200).json({
         link : base
     })
-    
+    return;
 })
 
 router.get("/api/toggleLink", userAuthMiddlewareget,async (req,res)=>{
@@ -192,12 +258,13 @@ router.get("/api/toggleLink", userAuthMiddlewareget,async (req,res)=>{
     res.status(200).json({
         msg: `sharing toggled to ${!b}`
     })
-    return
+    return;
 }
 catch(e){
     res.status(400).json({
         msg: "internal server error"
     })
+    return;
 }
 })
 
@@ -209,6 +276,7 @@ router.get("/api/fetchLink",async (req,res)=>{
         })
         return;
     }
+    try{
     const lnk = await linkModel.findOne({hash:hash}).populate<{userId : Iuser}>("userId");
     if(!lnk){
         res.status(400).json({msg: "user not found"});
@@ -216,6 +284,7 @@ router.get("/api/fetchLink",async (req,res)=>{
     }
     if(!lnk.share){
         res.status(400).json({msg: "sharing is disabled"});
+        return;
     }
     const name = lnk.userId.name
     const content = await contentModel.findOne({userId : lnk.userId._id}).populate("tags");
@@ -224,6 +293,13 @@ router.get("/api/fetchLink",async (req,res)=>{
         content : content
     })
     return;
+}
+catch(e){
+    res.status(500).json({
+        msg: "internal server error"
+    })
+    return;
+}
     
 })
 

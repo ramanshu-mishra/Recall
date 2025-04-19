@@ -1,0 +1,12 @@
+{
+  "name": "recall_backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build" : "npm i -D typescript && npm install && tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

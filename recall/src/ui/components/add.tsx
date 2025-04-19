@@ -7,7 +7,7 @@ import load from "../../assets/loading.png"
 import logo from "../../assets/logo.png"
 import Button from "./button";
 import { server } from "../../exports";
-import { render, tokenContext } from "./context";
+import { render } from "./context";
 
 
 // ...imports stay the same
@@ -55,10 +55,10 @@ export function Add() {
     const [type, setType] = useState("others");
     const [tags, setTags] = useState<string[]>([]);
     const [image, setImage] = useState("");
-    const correctlink = link.startsWith("http://") || link.startsWith("https://") ? link : "http://" + link;
+    const correctlink = (link.startsWith("http://") || link.startsWith("https://")) ? link : "http://" + link;
     const { data, loading, error } = usePreview(correctlink);
     const [tag,setTag]= useState("");
-    const [rerender, setRerender]= useContext(render);
+    const [_rerender, setRerender]= useContext(render);
     const jwt = localStorage.getItem("token");
 
     useEffect(() => {
@@ -106,7 +106,7 @@ export function Add() {
         })
         setType(tp);
       }
-    }, [loading, error, data]);
+    }, [loading, error, data, correctlink, tags]);
     
     function handleTags(e: React.KeyboardEvent<HTMLInputElement>){
         if(e.key == " " && tag.trim() != "" && tag != undefined){

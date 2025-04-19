@@ -1,11 +1,11 @@
 import { NavBar } from "./ui/components/navbar"
-import { BrowserRouter, Routes , Route, Navigate, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { SideBar} from "./ui/components/sidebar"
 import { SearchBar } from "./ui/components/searchBar"
 import Button from "./ui/components/button"
 import logo from "./assets/logo.png"
 import { Card } from "./ui/components/card"
-import React, { createContext, SetStateAction, useContext,useState,useEffect, useRef, Ref } from "react"
+import  {  useContext,useState,useEffect, useRef } from "react"
 import { cardState } from "./ui/components/context"
 import {addContext, cardContext} from "./ui/components/context"
 import { Add } from "./ui/components/add"
@@ -35,7 +35,7 @@ function RepeatDivs() {
     const arr  = new Array(num).fill(null);
   return (
     <>
-    {arr.map(i=>{
+    {arr.map(_i=>{
       return <LoadCard></LoadCard>
     })}
     </>
@@ -45,7 +45,7 @@ import { contents } from "./exports"
 import { render } from "./ui/components/context"
 export  function Dash(){
   const navigate = useNavigate();
-  const [jwt,setJwt] = useContext(tokenContext);
+  const [jwt,_setJwt] = useContext(tokenContext);
   const [rerender,setRerender] = useState(false);
   const [cards, setCards] = useState<contents[]>([]);
   const [visibleCards, setVisibleCards] = useState<contents[]>([]);
@@ -54,11 +54,12 @@ export  function Dash(){
   const [add, setAdd] = useState(false);
   const {data, loading, error} = useFetchData(jwt? jwt : "", rerender);
   const loadref = useRef<HTMLDivElement>(null);
-  const [detail, setDetail] = useContext(detailContext);
+  const [detail, _setDetail] = useContext(detailContext);
 
+  console.log(error);
   useEffect(()=>{
     if(jwt == "")navigate("/login");
-  }, [jwt]) 
+  }, [jwt, navigate]) 
 
   useEffect(()=>{
     setCards(data);

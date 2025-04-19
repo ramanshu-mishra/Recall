@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/button"
 import logo from "../../assets/logo.png"; // adjust if needed
@@ -13,7 +13,7 @@ const passwordSchema = z.string().min(8).refine(s=>!s.includes(' '));
 
 function useCheckExistingEmail(email:string){
   const [exists, setExists] = useState(false);
-  async function check (){
+  async function check (email:string){
     const r = await fetch(server + "/api/email", {
       method: "GET",
       headers : {
@@ -34,14 +34,14 @@ function useCheckExistingEmail(email:string){
     }
   }
   useEffect(()=>{
-    check();
+    check(email);
   }, [email])
   return exists;
 }
 
 function useCheckExistingUsername(username:string){
   const [exists, setExists] = useState(false);
-  async function check (){
+  async function check (username:string){
     const r = await fetch(server + "/api/username", {
       method: "GET",
       headers : {
@@ -62,7 +62,7 @@ function useCheckExistingUsername(username:string){
     }
   }
   useEffect(()=>{
-    check();
+    check(username);
   }, [username]);
   console.log(exists);
   return exists;

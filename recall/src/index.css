@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.custom-home-gradient {
+  background: linear-gradient(
+    to bottom,
+    black 0%,
+    #FEDE00 10%,
+    #FEDE00 90%,
+    black 100%
+  );
+}
+.custom-home-gradient2   {
+  background: linear-gradient(
+    to right,
+    #e43d66 0%,
+   #e45377 10%,
+    #FB6B90 20%,
+    #fe7597 30%,
+    #fe7597 70%,
+    #FB6B90 80%,
+    #e45377 90%,
+     #e43d66 100%
+  );
+}

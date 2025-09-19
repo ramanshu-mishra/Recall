@@ -2,11 +2,12 @@ import { NavBar } from "../components/navbar";
 import Button from "../components/button";
 import logo from "../../assets/logo.png";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export function Landing_One() {
     const navigate = useNavigate();
     return (
-        <div className="bg-gradient-to-br from-blue-50 via-white to-purple-100 min-h-screen">
+        <div className="bg-gradient-to-br from-slate-50 via-white to-blue-50 min-h-screen">
             <NavBar className="" variant="home" size="lg" logo={logo}>
                 <div className="relative flex w-[100vw]  -translate-x-[100px] -translate-y-[20px]">
                     <div className="absolute right-0 flex gap-2 ">
@@ -16,70 +17,115 @@ export function Landing_One() {
                 </div>
             </NavBar>
             {/* Hero Section */}
-            <section className="relative flex flex-col items-center justify-center py-28 px-4 text-center overflow-hidden">
+            <section className="relative flex flex-col items-center justify-center py-32 px-4 text-center overflow-hidden">
                 {/* Background Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-400/30 via-purple-300/20 to-pink-200/20 pointer-events-none z-0" />
+                <div className="absolute inset-0 bg-gradient-to-br from-slate-900/5 via-blue-900/10 to-indigo-900/5 pointer-events-none z-0" />
                 {/* Decorative Circles */}
-                <div className="absolute -top-16 -left-16 w-72 h-72 bg-purple-200 rounded-full opacity-30 blur-2xl z-0" />
-                <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-pink-100 rounded-full opacity-20 blur-3xl z-0" />
+                <div className="absolute -top-24 -left-24 w-96 h-96 bg-gradient-to-br from-blue-400/20 to-indigo-400/20 rounded-full opacity-60 blur-3xl z-0" />
+                <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] bg-gradient-to-br from-indigo-400/15 to-purple-400/15 rounded-full opacity-50 blur-3xl z-0" />
                 <div className="relative z-10 flex flex-col items-center">
-                    <img src={logo} alt="Recall Logo" className="h-16 mb-6 drop-shadow-lg" />
-                    <h1 className="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-blue-700 via-purple-600 to-pink-500 bg-clip-text text-transparent mb-6 drop-shadow">
+                    <motion.img 
+                        src={logo} 
+                        alt="Recall Logo" 
+                        className="h-20 mb-8 drop-shadow-xl"
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.6, ease: "easeOut" }}
+                    />
+                    <motion.h1 
+                        className="text-6xl md:text-7xl font-black bg-gradient-to-r from-slate-800 via-blue-700 to-indigo-700 bg-clip-text text-transparent mb-8 leading-tight"
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                    >
                         Your Second Brain for the Web
-                    </h1>
-                    <p className="text-lg md:text-2xl text-gray-700 max-w-2xl mb-8">
-                        Effortlessly manage bookmarks, share your knowledge, and query your notes with AI. Recall is your all-in-one productivity companion.
-                    </p>
-                    <div className="flex gap-4 justify-center mb-10">
+                    </motion.h1>
+                    <motion.p 
+                        className="text-xl md:text-2xl text-slate-600 max-w-3xl mb-12 font-medium leading-relaxed"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+                    >
+                        Arrange all your bookmarks at one place
+                    </motion.p>
+                    <motion.div 
+                        className="flex gap-6 justify-center mb-16"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
+                    >
                         <Button variant="primary" onClick={() => navigate("/signup")}>Get Started Free</Button>
                         <Button variant="outline" onClick={() => navigate("/login")}>Learn More</Button>
-                    </div>
+                    </motion.div>
                    
                 </div>
             </section>
             {/* Features Section */}
-            <section className="py-20 bg-white">
-                <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-10 px-4">
-                    <div className="rounded-xl shadow-lg p-8 bg-gradient-to-br from-blue-100 to-purple-100 flex flex-col items-center">
-                        <svg className="w-12 h-12 mb-4 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path d="M5 5v14h14V5H5zm2 2h10v10H7V7zm2 2v6h6V9H9z" />
-                        </svg>
-                        <h2 className="text-xl font-bold mb-2 text-blue-700">Bookmark Management</h2>
-                        <p className="text-gray-600 text-center">Save, organize, and search all your web bookmarks in one place. Never lose a link again.</p>
-                    </div>
-                    <div className="rounded-xl shadow-lg p-8 bg-gradient-to-br from-purple-100 to-pink-100 flex flex-col items-center">
-                        <svg className="w-12 h-12 mb-4 text-purple-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path d="M17 20h5v-2a4 4 0 0 0-4-4h-1M9 20H4v-2a4 4 0 0 1 4-4h1m0-4V4a2 2 0 1 1 4 0v6m-4 0h4" />
-                        </svg>
-                        <h2 className="text-xl font-bold mb-2 text-purple-700">Share Your Second Brain</h2>
-                        <p className="text-gray-600 text-center">Collaborate and share curated collections or notes with friends, teams, or the world.</p>
-                    </div>
-                    <div className="rounded-xl shadow-lg p-8 bg-gradient-to-br from-pink-100 to-blue-100 flex flex-col items-center">
-                        <svg className="w-12 h-12 mb-4 text-pink-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path d="M12 20v-6m0 0V4m0 10h4m-4 0H8" />
-                        </svg>
-                        <h2 className="text-xl font-bold mb-2 text-pink-700">AI Notes Query</h2>
-                        <p className="text-gray-600 text-center">Ask questions and instantly find information in your notes using powerful AI search.</p>
-                    </div>
-                </div>
-            </section>
-            {/* Testimonials Section */}
-            <section className="py-16 bg-gradient-to-r from-blue-50 to-purple-50">
-                <div className="max-w-4xl mx-auto px-4">
-                    <h3 className="text-3xl font-bold text-center mb-10 text-purple-700">What our users say</h3>
+            <section className="py-24 bg-gradient-to-b from-slate-50 to-white">
+                <div className="max-w-6xl mx-auto px-6">
+                    <motion.div 
+                        className="text-center mb-16"
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        viewport={{ once: true }}
+                    >
+                        <h2 className="text-4xl md:text-5xl font-bold text-slate-800 mb-4">
+                            Everything you need to organize your digital life
+                        </h2>
+                        <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                            Powerful features designed to help you capture, organize, and retrieve information effortlessly
+                        </p>
+                    </motion.div>
                     <div className="grid md:grid-cols-3 gap-8">
-                        <div className="bg-white rounded-lg shadow p-6">
-                            <p className="italic text-gray-700">"Recall is my go-to for saving and finding anything important on the web."</p>
-                            <div className="mt-4 font-semibold text-blue-600">— Alex</div>
-                        </div>
-                        <div className="bg-white rounded-lg shadow p-6">
-                            <p className="italic text-gray-700">"Sharing my research notes with my team is effortless now."</p>
-                            <div className="mt-4 font-semibold text-purple-600">— Priya</div>
-                        </div>
-                        <div className="bg-white rounded-lg shadow p-6">
-                            <p className="italic text-gray-700">"The AI search is a game changer for finding my notes."</p>
-                            <div className="mt-4 font-semibold text-pink-600">— Sam</div>
-                        </div>
+                        <motion.div 
+                            className="group relative bg-white rounded-2xl p-8 shadow-sm border border-slate-200 hover:shadow-xl hover:border-blue-200 transition-all duration-300"
+                            initial={{ opacity: 0, y: 50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.1 }}
+                            viewport={{ once: true }}
+                            whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                        >
+                            <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-200 transition-colors duration-300">
+                                <svg className="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <path d="M19 11H5m14 0a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2m14 0V9a2 2 0 0 0-2-2M5 11V9a2 2 0 0 1 2-2m0 0V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2M7 7h10" />
+                                </svg>
+                            </div>
+                            <h3 className="text-xl font-semibold text-slate-800 mb-3">Smart Bookmark Management</h3>
+                            <p className="text-slate-600 leading-relaxed">Save, organize, and search all your web bookmarks with intelligent categorization. Never lose an important link again.</p>
+                        </motion.div>
+                        <motion.div 
+                            className="group relative bg-white rounded-2xl p-8 shadow-sm border border-slate-200 hover:shadow-xl hover:border-indigo-200 transition-all duration-300"
+                            initial={{ opacity: 0, y: 50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.3 }}
+                            viewport={{ once: true }}
+                            whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                        >
+                            <div className="w-14 h-14 bg-indigo-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-indigo-200 transition-colors duration-300">
+                                <svg className="w-7 h-7 text-indigo-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                                </svg>
+                            </div>
+                            <h3 className="text-xl font-semibold text-slate-800 mb-3">Collaborative Sharing</h3>
+                            <p className="text-slate-600 leading-relaxed">Share curated collections and knowledge bases with your team or the world. Collaborate seamlessly on research projects.</p>
+                        </motion.div>
+                        <motion.div 
+                            className="group relative bg-white rounded-2xl p-8 shadow-sm border border-slate-200 hover:shadow-xl hover:border-purple-200 transition-all duration-300"
+                            initial={{ opacity: 0, y: 50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.5 }}
+                            viewport={{ once: true }}
+                            whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                        >
+                            <div className="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-purple-200 transition-colors duration-300">
+                                <svg className="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                </svg>
+                            </div>
+                            <h3 className="text-xl font-semibold text-slate-800 mb-3">AI-Powered Search</h3>
+                            <p className="text-slate-600 leading-relaxed">Ask questions and instantly find information across all your saved content using advanced AI search capabilities.</p>
+                        </motion.div>
                     </div>
                 </div>
             </section>
@@ -88,7 +134,7 @@ export function Landing_One() {
                 <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center px-4">
                     <img src={logo} alt="Recall Logo" className="h-10 mb-4 md:mb-0" />
                     <div className="text-gray-500 text-sm">
-                        © {new Date().getFullYear()} Recall. All rights reserved.
+                        Ramanshu Sharan Mishra production
                     </div>
                     <div className="flex gap-4 mt-4 md:mt-0">
                         <a href="#" className="text-blue-500 hover:underline">Privacy Policy</a>

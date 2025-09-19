@@ -42,24 +42,24 @@ interface SearchBarProps{
         <div
             className={combine(
                 className,
-                "flex items-center bg-white/80 border border-gray-300 rounded-full shadow-sm px-3 transition focus-within:ring-2 focus-within:ring-[#A16AE8]",
-                "hover:shadow-md"
+                "flex items-center bg-white/95 backdrop-blur-sm border border-slate-200 rounded-xl shadow-sm px-4 transition-all duration-200 focus-within:ring-2 focus-within:ring-blue-500/30 focus-within:border-blue-400",
+                "hover:shadow-lg hover:border-slate-300"
             )}
             style={styles}
         >
             <button
                 type="button"
                 onClick={handleClick}
-                className="p-1 rounded-full hover:bg-[#F9C46B]/30 transition"
+                className="p-2 rounded-lg hover:bg-blue-50 transition-all duration-200 flex items-center justify-center"
                 tabIndex={-1}
             >
-                <img src={search} alt="" style={{ height: "1.5em", width: "1.5em" }} />
+                <img src={search} alt="" className="h-5 w-5 opacity-60" />
             </button>
             <input
                 style={{
                     width: "100%",
                     height: "100%",
-                    marginLeft: "8px",
+                    marginLeft: "12px",
                     backgroundColor: "transparent"
                 }}
                 type="text"
@@ -67,7 +67,7 @@ interface SearchBarProps{
                 onChange={(e) => setText(e.target.value)}
                 onKeyDown={handleEnter}
                 placeholder={placeholder}
-                className="border-none bg-transparent focus:outline-none text-black placeholder-gray-400"
+                className="border-none bg-transparent focus:outline-none text-slate-700 placeholder-slate-400 font-medium text-sm"
             />
         </div>
     );

@@ -51,6 +51,8 @@ export default function Login() {
         const token = data.token;
         setJwt(token);
         localStorage.setItem("token", token);
+        localStorage.setItem("userDisplayName", data.name);
+        localStorage.setItem("userUsername", data.username);
         setDetail({
           name: data.name,
           username : data.username

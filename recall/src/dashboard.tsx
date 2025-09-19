@@ -13,16 +13,17 @@ import { useFetchData } from "./ui/components/hooks"
 import { LoadCard } from "./ui/components/loadcard"
 import { tokenContext, detailContext } from "./ui/components/context"
 import { Landing } from "./ui/template"
+import { motion, AnimatePresence } from "framer-motion"
 
 const btns = [
   {
     // title: "people",
     button : [
-      {title: "Bookmarks",
+      {title: "📖 Bookmarks",
         url : "/dash"
       },
       {
-        title: "Notes",
+        title: "📝 Notes",
         url: "/dash"
       }
     ]
@@ -60,7 +61,7 @@ export  function Dash(){
   console.log(error);
   useEffect(()=>{
     if(jwt == "")navigate("/login");
-  }, [jwt]) 
+  }, [jwt, navigate]) 
 
   useEffect(()=>{
     setCards(data);
@@ -91,12 +92,20 @@ export  function Dash(){
     },[cardStates.length, visibleCards]);
 
    
+      
+    
 
 
   return (
       
     <Landing>
-    <div className="h-screen flex flex-col"><cardContext.Provider value={[cards, visibleCards, setVisibleCards]}>
+    <motion.div 
+      className="h-screen flex flex-col bg-gradient-to-br from-slate-50 to-blue-50"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <cardContext.Provider value={[cards, visibleCards, setVisibleCards]}>
       <render.Provider value={[rerender, setRerender]}>
       <div className="transition-all h-full">
     {<addContext.Provider value={[add,setAdd]}><Add></Add></addContext.Provider>}
@@ -105,47 +114,77 @@ export  function Dash(){
     
       <div className="">
         {/* navbar */}
-      <NavBar className="" variant="home" size="lg" logo= {logo}>
+      <NavBar className="bg-white/80 backdrop-blur-md border-b border-slate-200" variant="home" size="lg" logo= {logo}>
         <div className="flex w-[100vw] justify-center -translate-x-[100px]">
-        <SearchBar height="max(4vh, 25px)" width="40vw"></SearchBar>
-        <div className="absolute right-[0%] flex gap-2 ">
+        <motion.div
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <SearchBar height="max(4vh, 32px)" width="40vw"></SearchBar>
+        </motion.div>
+        <motion.div 
+          className="absolute right-[0%] flex gap-3"
+          initial={{ x: 20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+        >
         <Button variant="ghost" onClick={()=>{
           setAdd(true);
-        }}>Add</Button>
-        <Button variant = "ghost">Note</Button>
-        </div>
+        }}>Add Bookmark</Button>
+        <Button variant = "ghost">Create Note</Button>
+        </motion.div>
         </div>
 
         </NavBar>
         {/* navbar done */}
     </div>
     <div className="flex flex-1 h-full overflow-hidden">
-      <div className="flex basis-auto bg-white">
-      <SideBar name={detail.name} username={detail.username} groups={btns}></SideBar>
-      </div>
-      <div className="flex-1 p-6 overflow-y-auto">
+      
+      <motion.div 
+        className="flex basis-auto bg-white/50 backdrop-blur-sm border-r border-slate-200"
+        initial={{ x: -100, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+      >
+        
+      <SideBar name={detail.name || localStorage.getItem("userDisplayName")|| "User"} username={detail.username || localStorage.getItem("userUsername") ||"username"} groups={btns}></SideBar>
+      </motion.div>
+      <motion.div 
+        className="flex-1 p-8 overflow-y-auto bg-gradient-to-br from-slate-50/50 to-blue-50/30"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+      >
         
      
-    { <div ref={loadref} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" >
+    { <div ref={loadref} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8" >
  {
   loading && <RepeatDivs></RepeatDivs>
 }
 {
   visibleCards.map((card: contents, i: number) => {
-    return <div key={i} ref={(x: HTMLDivElement | null) => { cardRef.current[i] = x }}>
+    return <motion.div 
+      key={i} 
+      ref={(x: HTMLDivElement | null) => { cardRef.current[i] = x }}
+      initial={{ opacity: 0, y: 30, scale: 0.9 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.4, delay: i * 0.1 }}
+      whileHover={{ y: -8, transition: { duration: 0.2 } }}
+    >
       <Card index={i} title={card.title} description={card.description} image={card.image} type={card.type} tags={card.tags.map((t,_)=>{return t?.title})} link={card.link} key={i} _id={card._id} ></Card>
-    </div>
+    </motion.div>
   })
 }
     </div>}
-  </div>
+  </motion.div>
     </div>
     </div>
     </cardState.Provider>}
     </div>
     </render.Provider>
     </cardContext.Provider>
-    </div>
+    </motion.div>
     </Landing>
   )
 }
